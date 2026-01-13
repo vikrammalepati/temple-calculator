@@ -1,820 +1,695 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 
   <title>Temple Salary Calculator (AP)</title>
 
-
   <!-- ✅ PWA -->
-
   <link rel="manifest" href="manifest.json" />
-
   <meta name="theme-color" content="#0b1220" />
-
   <meta name="description" content="AP Temple ESI + EPF + Minimum Wage + EPFO Opt-out calculator" />
 
-
   <!-- iOS support -->
-
   <meta name="apple-mobile-web-app-capable" content="yes" />
-
   <meta name="apple-mobile-web-app-title" content="Temple Calculator" />
-
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-  <!-- optional iOS icon -->
-
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-
+  <link rel="apple-touch-icon" href="icon-192.png" />
 
   <style>
-
     :root {
-
       --bg1: #0b1220;
-
       --bg2: #111a2e;
-
       --card: rgba(255,255,255,.08);
-
       --card2: rgba(255,255,255,.06);
-
       --stroke: rgba(255,255,255,.14);
-
       --text: #eaf0ff;
-
       --muted: rgba(234,240,255,.75);
-
       --accent: #7c5cff;
-
       --accent2: #22d3ee;
-
       --good: #34d399;
-
       --warn: #f59e0b;
-
       --bad: #fb7185;
-
       --shadow: 0 18px 60px rgba(0,0,0,.45);
-
       --radius: 18px;
-
     }
-
 
     * { box-sizing: border-box; }
-
     body {
-
       margin: 0;
-
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-
       background: radial-gradient(1000px 700px at 10% 10%, rgba(124,92,255,.35), transparent 55%),
-
                   radial-gradient(900px 650px at 90% 25%, rgba(34,211,238,.25), transparent 55%),
-
                   linear-gradient(180deg, var(--bg1), var(--bg2));
-
       color: var(--text);
-
       min-height: 100vh;
-
-      padding: 26px;
-
+      padding: 18px;
     }
-
 
     .container { max-width: 1120px; margin: 0 auto; }
 
-
     header {
-
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 14px;
-
       align-items: center;
-
       justify-content: space-between;
-
       margin-bottom: 18px;
-
     }
-
 
     .title { display: flex; flex-direction: column; gap: 4px; }
-
-    h1 { margin: 0; font-size: 26px; letter-spacing: .3px; }
-
+    h1 { margin: 0; font-size: 24px; letter-spacing: .3px; }
     .subtitle { color: var(--muted); font-size: 13px; }
 
-
     .badge {
-
       padding: 9px 12px;
-
       border-radius: 999px;
-
       background: linear-gradient(90deg, rgba(124,92,255,.25), rgba(34,211,238,.18));
-
       border: 1px solid rgba(255,255,255,.14);
-
       color: var(--muted);
-
       font-size: 13px;
-
       backdrop-filter: blur(10px);
-
       box-shadow: 0 10px 30px rgba(0,0,0,.22);
-
     }
-
 
     .grid {
-
       display: grid;
-
       grid-template-columns: 1.1fr .9fr;
-
       gap: 18px;
-
     }
-
     @media (max-width: 940px) { .grid { grid-template-columns: 1fr; } }
 
-
     .card {
-
       background: linear-gradient(180deg, var(--card), var(--card2));
-
       border: 1px solid var(--stroke);
-
       border-radius: var(--radius);
-
       box-shadow: var(--shadow);
-
       overflow: hidden;
-
     }
-
 
     .card-head {
-
       padding: 16px 18px;
-
       border-bottom: 1px solid rgba(255,255,255,.10);
-
       display: flex;
-
       align-items: center;
-
       justify-content: space-between;
-
       gap: 12px;
-
     }
-
 
     .card-head h2 {
-
       margin: 0;
-
       font-size: 15px;
-
       color: rgba(234,240,255,.92);
-
       letter-spacing: .2px;
-
     }
-
 
     .card-body { padding: 18px; }
 
-
     .row {
-
       display: grid;
-
       grid-template-columns: 1fr 1fr;
-
       gap: 12px;
-
       margin-bottom: 12px;
-
     }
-
     @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
 
-
     label {
-
       display: block;
-
       font-size: 12px;
-
       color: var(--muted);
-
       margin-bottom: 8px;
-
     }
-
 
     .input {
-
       display: flex;
-
       align-items: center;
-
       border: 1px solid rgba(255,255,255,.14);
-
       border-radius: 14px;
-
       background: rgba(0,0,0,.22);
-
       overflow: hidden;
-
     }
-
 
     .prefix {
-
       padding: 10px 12px;
-
       font-size: 13px;
-
       color: rgba(234,240,255,.65);
-
       border-right: 1px solid rgba(255,255,255,.10);
-
       background: rgba(255,255,255,.04);
-
       white-space: nowrap;
-
     }
-
 
     input, select {
-
       width: 100%;
-
       padding: 12px 12px;
-
       font-size: 14px;
-
       border: none;
-
       outline: none;
-
       background: transparent;
-
       color: var(--text);
-
     }
 
+    input[readonly] {
+      opacity: 0.9;
+      cursor: not-allowed;
+    }
 
     select { cursor: pointer; }
 
-
     .actions {
-
       display: flex;
-
       gap: 10px;
-
       flex-wrap: wrap;
-
       margin-top: 14px;
-
     }
-
 
     button {
-
       cursor: pointer;
-
       border: none;
-
       padding: 12px 14px;
-
       border-radius: 14px;
-
       font-weight: 700;
-
       letter-spacing: .2px;
-
       transition: .2s;
-
     }
-
 
     .btn-primary {
-
       background: linear-gradient(90deg, var(--accent), var(--accent2));
-
       color: #061021;
-
       box-shadow: 0 14px 40px rgba(124,92,255,.24);
-
     }
-
     .btn-primary:hover { transform: translateY(-1px); }
 
-
     .btn-ghost {
-
       background: rgba(255,255,255,.06);
-
       border: 1px solid rgba(255,255,255,.14);
-
       color: rgba(234,240,255,.9);
-
     }
-
     .btn-ghost:hover { background: rgba(255,255,255,.09); }
 
-
     .note {
-
       margin-top: 14px;
-
       color: rgba(234,240,255,.65);
-
       font-size: 12px;
-
       line-height: 1.5;
-
     }
-
 
     .resultBox {
-
       padding: 14px 14px;
-
       background: rgba(0,0,0,.20);
-
       border: 1px solid rgba(255,255,255,.14);
-
       border-radius: 16px;
-
       margin-bottom: 12px;
-
     }
-
 
     .resultTop {
-
       display: flex;
-
       align-items: baseline;
-
       justify-content: space-between;
-
       gap: 10px;
-
       margin-bottom: 8px;
-
     }
-
 
     .resultTop b { font-size: 13px; color: rgba(234,240,255,.9); }
-
     .resultTop span { font-size: 12px; color: rgba(234,240,255,.65); }
 
-
     .big { font-size: 26px; font-weight: 800; letter-spacing: .2px; margin: 0; }
-
     .split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 
-
     .kv {
-
       padding: 10px 12px;
-
       border-radius: 14px;
-
       background: rgba(255,255,255,.05);
-
       border: 1px solid rgba(255,255,255,.10);
-
     }
-
 
     .kv small { display: block; color: rgba(234,240,255,.65); font-size: 12px; }
-
     .kv strong { display: block; font-size: 15px; margin-top: 2px; white-space: pre-line; }
 
-
     .tag {
-
       display: inline-flex;
-
       align-items: center;
-
       gap: 7px;
-
       font-size: 12px;
-
       color: rgba(234,240,255,.8);
-
       border: 1px solid rgba(255,255,255,.16);
-
       padding: 7px 10px;
-
       border-radius: 999px;
-
       background: rgba(255,255,255,.06);
-
     }
-
 
     .dot {
-
       width: 8px; height: 8px; border-radius: 50%;
-
       background: var(--good);
-
       box-shadow: 0 0 0 5px rgba(52,211,153,.15);
-
     }
-
     .dot.warn { background: var(--warn); box-shadow: 0 0 0 5px rgba(245,158,11,.15); }
-
     .dot.bad  { background: var(--bad);  box-shadow: 0 0 0 5px rgba(251,113,133,.15); }
 
-
     .foot { margin-top: 10px; font-size: 12px; color: rgba(234,240,255,.55); white-space: pre-line; }
-
     .mono { font-variant-numeric: tabular-nums; }
-
-
-    /* ✅ small install hint */
-
-    .installHint {
-
-      margin-top: 10px;
-
-      font-size: 12px;
-
-      color: rgba(234,240,255,.65);
-
-    }
-
   </style>
-
 </head>
 
-
 <body>
-
   <div class="container">
-
     <header>
-
       <div class="title">
-
         <h1>Temple Salary Calculator (AP)</h1>
-
         <div class="subtitle">Role-wise Minimum Wage • ESI/EPF • EPFO Opt-out</div>
-
       </div>
-
-      <div class="badge">Installable PWA • Offline Ready</div>
-
+      <div class="badge">Installable PWA</div>
     </header>
 
-
     <div class="grid">
-
       <!-- INPUTS -->
-
       <section class="card">
-
         <div class="card-head">
-
           <h2>Inputs</h2>
-
           <span class="tag"><span class="dot warn"></span><span>Role based MW + EPFO Rule</span></span>
-
         </div>
-
 
         <div class="card-body">
 
-
           <div class="row">
-
             <div>
-
               <label>Monthly Gross Salary</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="gross" type="number" min="0" step="1" placeholder="e.g. 25000" />
-
               </div>
-
             </div>
 
-
             <div>
-
               <label>Monthly Basic Salary</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="basic" type="number" min="0" step="1" placeholder="e.g. 15000" />
-
               </div>
-
             </div>
-
           </div>
 
-
           <div class="row">
-
             <div>
-
               <label>AP Zone</label>
-
               <div class="input">
-
                 <select id="apZone">
-
                   <option value="zone1" selected>Zone I (Vijayawada / Mangalagiri)</option>
-
                   <option value="zone2">Zone II (Rest of AP)</option>
-
                 </select>
-
               </div>
-
             </div>
-
 
             <div>
-
               <label>Temple Role</label>
-
               <div class="input">
-
                 <select id="role">
-
                   <option value="office_assistant" selected>Office Assistant / Admin Staff</option>
-
                   <option value="accountant">Accountant</option>
-
                   <option value="computer_operator">Computer Operator / Data Entry</option>
-
                   <option value="reception_clerk">Reception / Clerk</option>
-
                   <option value="store_keeper">Store Keeper / Godown Incharge</option>
-
                   <option value="security_guard">Security Guard</option>
-
                   <option value="head_security">Head Guard / Security Supervisor</option>
-
                   <option value="driver">Driver</option>
-
                   <option value="housekeeping">Housekeeping / Sweeper / Cleaner</option>
-
                   <option value="cook">Cook / Kitchen Staff</option>
-
                   <option value="helper">Helper / Attender</option>
-
                 </select>
-
               </div>
-
             </div>
-
           </div>
-
 
           <div class="row">
-
             <div>
-
               <label>AP Minimum Wage (Monthly) – Auto</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="minWage" type="number" min="0" step="0.1" readonly />
-
               </div>
-
             </div>
-
 
             <div>
-
               <label>Wage Structure Check (Labour Code)</label>
-
               <div class="input">
-
                 <select id="wageRule">
-
                   <option value="basic50" selected>Basic should be ≥ 50% of Gross</option>
-
                   <option value="off">Off</option>
-
                 </select>
-
               </div>
-
             </div>
-
           </div>
-
 
           <!-- ✅ EPFO Opt-out options -->
-
           <div class="row">
-
             <div>
-
               <label>EPFO Membership Status</label>
-
               <div class="input">
-
                 <select id="epfoStatus">
-
                   <option value="member" selected>Already EPF Member (PF mandatory)</option>
-
                   <option value="new_non_member">New Employee (Not EPF member earlier) → Opt-out possible</option>
-
                   <option value="voluntary">Voluntary EPF (Para 26(6) Opt-in)</option>
-
                 </select>
-
               </div>
-
             </div>
 
-
             <div>
-
               <label>Mandatory EPF wage ceiling</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="pfMandatoryCeiling" type="number" min="0" step="1" value="15000" />
-
               </div>
-
             </div>
-
           </div>
 
-
           <div class="row">
-
             <div>
-
               <label>ESI Salary Limit</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="esiLimit" type="number" min="0" step="1" value="21000" />
-
               </div>
-
             </div>
-
 
             <div>
-
               <label>PF Wage Ceiling (EPS calc cap)</label>
-
               <div class="input">
-
                 <div class="prefix">₹</div>
-
                 <input id="pfCeiling" type="number" min="0" step="1" value="15000" />
-
               </div>
-
             </div>
-
           </div>
-
 
           <div class="row">
-
             <div>
-
               <label>EPF Apply On</label>
-
               <div class="input">
-
                 <select id="pfOn">
-
                   <option value="basic" selected>Basic Salary</option>
-
                   <option value="gross">Gross Salary</option>
-
                 </select>
-
               </div>
-
             </div>
-
 
             <div>
-
               <label>Round off</label>
-
               <div class="input">
-
                 <select id="round">
-
                   <option value="yes" selected>Yes (Nearest ₹)</option>
-
                   <option value="no">No (2 decimals)</option>
-
                 </select>
-
               </div>
-
             </div>
-
           </div>
-
 
           <div class="actions">
-
             <button class="btn-primary" onclick="calculate()">Calculate Now</button>
-
             <button class="btn-ghost" onclick="resetAll()">Reset</button>
-
           </div>
-
-
-          <div class="installHint" id="installHint"></div>
-
 
           <div class="note">
-
             ✅ EPFO Opt-out works only for New employee (not EPF member earlier) AND PF wage > ₹15,000 at joining.<br/>
-
             ✅ EPF split: Employer EPS = 8.33% on min(PF wage, ₹15,000). Balance goes to Employer EPF.
-
           </div>
-
         </div>
-
       </section>
 
-
       <!-- RESULTS -->
-
       <section class="card">
-
         <div class="card-head">
-
           <h2>Results</h2>
-
           <span class="tag">
-
             <span class="dot warn" id="dot"></span>
-
             <span id="statusText">Enter salary details</span>
-
           </span>
-
         </div>
 
-
         <div class="card-body">
+          <div class="resultBox">
+            <div class="resultTop">
+              <b>Total Monthly Deductions</b>
+              <span>Employee side</span>
+            </div>
+            <p class="big mono" id="totalDeduction">₹0</p>
+            <div class="split">
+              <div class="kv"><small>Employee EPF</small><strong class="mono" id="empEPF">₹0</strong></div>
+              <div class="kv"><small>Employee ESI</small><strong class="mono" id="empESI">₹0</strong></div>
+            </div>
+          </div>
 
           <div class="resultBox">
-
             <div class="resultTop">
-
-              <b>Total Monthly Deductions</b>
-
-              <span>Employee side</span>
-
+              <b>Employer Contribution</b>
+              <span>Company cost</span>
             </div>
+            <p class="big mono" id="totalEmployer">₹0</p>
+            <div class="split">
+              <div class="kv"><small>Employer PF Total</small><strong class="mono" id="emprPF">₹0</strong></div>
+              <div class="kv"><small>Employer ESI</small><strong class="mono" id="emprESI">₹0</strong></div>
+            </div>
+          </div>
 
-            <p class="big mono" id="totalDeduction">
+          <div class="resultBox">
+            <div class="resultTop">
+              <b>EPFO Status</b>
+              <span>Opt-out check</span>
+            </div>
+            <div class="kv">
+              <small>EPFO rule result</small>
+              <strong class="mono" id="epfoResult">—</strong>
+            </div>
+          </div>
+
+          <div class="resultBox">
+            <div class="resultTop"><b>AP Minimum Wage Check</b><span>Temple role based</span></div>
+            <div class="split">
+              <div class="kv"><small>Minimum Wage</small><strong class="mono" id="minWageShow">₹0</strong></div>
+              <div class="kv"><small>Status</small><strong class="mono" id="minWageStatus">—</strong></div>
+            </div>
+            <div class="foot" id="complianceNote">Auto minimum wage applied based on role + zone.</div>
+          </div>
+
+          <div class="resultBox">
+            <div class="resultTop"><b>EPF Detailed Breakup</b><span>Employer split</span></div>
+            <div class="split">
+              <div class="kv"><small>Employer EPS (8.33%)</small><strong class="mono" id="eps">₹0</strong></div>
+              <div class="kv"><small>Employer EPF (3.67%)</small><strong class="mono" id="emprEPF">₹0</strong></div>
+            </div>
+            <div class="foot">*If EPFO Opt-out applied, PF/EPS will be 0.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Temple role minimum wage mapping (AP, zone-wise)
+    const ROLE_MIN_WAGE = {
+      office_assistant:   { zone1: 12812.40, zone2: 12596.40 },
+      accountant:         { zone1: 14267.40, zone2: 14067.40 },
+      computer_operator:  { zone1: 12596.40, zone2: 12467.40 },
+      reception_clerk:    { zone1: 12812.40, zone2: 12596.40 },
+      store_keeper:       { zone1: 12812.40, zone2: 12596.40 },
+      security_guard:     { zone1: 12812.40, zone2: 12596.40 },
+      head_security:      { zone1: 14267.40, zone2: 14067.40 },
+      driver:             { zone1: 12812.40, zone2: 12596.40 },
+      housekeeping:       { zone1: 12596.40, zone2: 12467.40 },
+      cook:               { zone1: 12596.40, zone2: 12467.40 },
+      helper:             { zone1: 12596.40, zone2: 12467.40 }
+    };
+
+    function formatMoney(v, round) {
+      if (isNaN(v) || v === null) v = 0;
+      if (round === "yes") {
+        v = Math.round(v);
+        return "₹" + v.toLocaleString("en-IN");
+      } else {
+        return "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    }
+
+    function applyMinWageFromRole() {
+      const zoneEl = document.getElementById("apZone");
+      const roleEl = document.getElementById("role");
+      const minWageEl = document.getElementById("minWage");
+
+      if (!zoneEl || !roleEl || !minWageEl) return;
+
+      const zone = zoneEl.value;
+      const role = roleEl.value;
+
+      const wage = (ROLE_MIN_WAGE[role] && ROLE_MIN_WAGE[role][zone]) ? ROLE_MIN_WAGE[role][zone] : 0;
+      minWageEl.value = wage.toFixed(2);
+
+      // trigger event in some browsers
+      minWageEl.dispatchEvent(new Event("input"));
+    }
+
+    function calculate() {
+      try {
+        const gross = parseFloat(document.getElementById("gross").value || 0);
+        const basic = parseFloat(document.getElementById("basic").value || 0);
+
+        const esiLimit = parseFloat(document.getElementById("esiLimit").value || 21000);
+        const pfCeiling = parseFloat(document.getElementById("pfCeiling").value || 15000);
+        const pfOn = document.getElementById("pfOn").value;
+        const round = document.getElementById("round").value;
+
+        const minWage = parseFloat(document.getElementById("minWage").value || 0);
+        const wageRule = document.getElementById("wageRule").value;
+
+        const epfoStatus = document.getElementById("epfoStatus").value;
+        const pfMandatoryCeiling = parseFloat(document.getElementById("pfMandatoryCeiling").value || 15000);
+
+        const pfWage = (pfOn === "gross") ? gross : basic;
+
+        // EPFO opt-out rule
+        let epfApplicable = true;
+        let epfoResultText = "";
+
+        if (epfoStatus === "member") {
+          epfApplicable = true;
+          epfoResultText = "✅ Already EPF member → EPF compulsory";
+        } else if (epfoStatus === "new_non_member") {
+          if (pfWage > pfMandatoryCeiling) {
+            epfApplicable = false;
+            epfoResultText = "⚠️ Excluded employee → EPF can be OPT-OUT (New joiner + PF wage > ₹15,000)";
+          } else {
+            epfApplicable = true;
+            epfoResultText = "✅ PF wage ≤ ₹15,000 → EPF compulsory";
+          }
+        } else if (epfoStatus === "voluntary") {
+          epfApplicable = true;
+          epfoResultText = "✅ Voluntary EPF enabled (Para 26(6) opt-in)";
+        }
+
+        // EPF calculations
+        let empEPF = 0, emprTotalPF = 0, eps = 0, emprEPF = 0;
+
+        if (epfApplicable) {
+          empEPF = pfWage * 0.12;
+          emprTotalPF = pfWage * 0.12;
+
+          const epsWage = Math.min(pfWage, pfCeiling);
+          eps = epsWage * 0.0833;
+          emprEPF = Math.max(0, emprTotalPF - eps);
+        }
+
+        // ESI calculations
+        const esiEligible = gross <= esiLimit && gross > 0;
+        const empESI = esiEligible ? gross * 0.0075 : 0;
+        const emprESI = esiEligible ? gross * 0.0325 : 0;
+
+        const totalDeduction = empEPF + empESI;
+        const totalEmployer = emprTotalPF + emprESI;
+
+        // Compliance checks
+        let minWageStatus = "—";
+        let complianceMsg = "";
+
+        document.getElementById("minWageShow").innerText = formatMoney(minWage, "no");
+
+        if (minWage > 0) {
+          if (gross < minWage) {
+            minWageStatus = "❌ BELOW minimum wage";
+            complianceMsg += "• Gross salary is below AP role-wise minimum wage.\n";
+          } else {
+            minWageStatus = "✅ OK (Meets minimum wage)";
+          }
+        }
+
+        if (wageRule === "basic50" && gross > 0) {
+          const requiredBasic = gross * 0.50;
+          if (basic < requiredBasic) {
+            complianceMsg += "• Wage structure risk: Basic is below 50% of Gross.\n";
+          }
+        }
+
+        // UI update
+        document.getElementById("empEPF").innerText = formatMoney(empEPF, round);
+        document.getElementById("empESI").innerText = formatMoney(empESI, round);
+        document.getElementById("totalDeduction").innerText = formatMoney(totalDeduction, round);
+
+        document.getElementById("emprPF").innerText = formatMoney(emprTotalPF, round);
+        document.getElementById("emprESI").innerText = formatMoney(emprESI, round);
+        document.getElementById("totalEmployer").innerText = formatMoney(totalEmployer, round);
+
+        document.getElementById("eps").innerText = formatMoney(eps, round);
+        document.getElementById("emprEPF").innerText = formatMoney(emprEPF, round);
+
+        document.getElementById("epfoResult").innerText = epfoResultText;
+        document.getElementById("minWageStatus").innerText = minWageStatus;
+
+        document.getElementById("complianceNote").innerText =
+          complianceMsg.trim().length > 0 ? complianceMsg.trim() : "✅ Role-wise minimum wage compliance looks OK.";
+
+        // Status tag (ESI)
+        const dot = document.getElementById("dot");
+        const statusText = document.getElementById("statusText");
+
+        if (gross <= 0 || pfWage <= 0) {
+          dot.className = "dot warn";
+          statusText.innerText = "Enter salary values";
+        } else if (esiEligible) {
+          dot.className = "dot";
+          statusText.innerText = "ESI Applicable (Gross ≤ Limit)";
+        } else {
+          dot.className = "dot bad";
+          statusText.innerText = "ESI Not Applicable (Gross > Limit)";
+        }
+      } catch (e) {
+        alert("Error: " + e.message);
+      }
+    }
+
+    function resetAll() {
+      document.getElementById("gross").value = "";
+      document.getElementById("basic").value = "";
+      document.getElementById("apZone").value = "zone1";
+      document.getElementById("role").value = "office_assistant";
+      document.getElementById("epfoStatus").value = "member";
+      document.getElementById("pfMandatoryCeiling").value = "15000";
+      document.getElementById("esiLimit").value = "21000";
+      document.getElementById("pfCeiling").value = "15000";
+      document.getElementById("wageRule").value = "basic50";
+      document.getElementById("pfOn").value = "basic";
+      document.getElementById("round").value = "yes";
+
+      applyMinWageFromRole();
+      calculate();
+    }
+
+    // ✅ make functions accessible to onclick (important for mobile PWA)
+    window.calculate = calculate;
+    window.resetAll = resetAll;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Attach events
+      ["gross","basic","esiLimit","pfCeiling","pfOn","round","wageRule","epfoStatus","pfMandatoryCeiling"].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", calculate);
+        el.addEventListener("change", calculate);
+      });
+
+      ["apZone","role"].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("change", () => {
+          applyMinWageFromRole();
+          calculate();
+        });
+      });
+
+      // Init
+      applyMinWageFromRole();
+      calculate();
+
+      // Service worker
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./service-worker.js");
+      }
+    });
+  </script>
+</body>
+</html>
